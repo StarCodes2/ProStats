@@ -1,0 +1,89 @@
+section .sec_header {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+	padding: 0;
+}
+
+section .sec_header h2 {
+	display: inline;
+	margin: 0 0 auto 0;
+	padding: 0;
+}
+
+section .sec_header span {
+	font-size: 1.5em;
+	margin-left: auto;
+}
+
+section .sec_header a, section .sec_header a:active {
+	color: #666666;
+	text-decoration: none;
+}
+
+section div a:hover {
+	color: #FF0002;
+}
+
+/* Repos */
+section .repos .repo {
+	max-width: 700px;
+	margin: auto;
+	margin-bottom: 10px;
+	padding: 10px;
+	border: 1px solid #666666;
+	border-radius: 5px;
+}
+
+section .repos .repo .title {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 5px;
+}
+
+section .repos .repo h4 {
+	font-size: 16px;
+	margin: 0;
+}
+
+section .repos .repo a,
+section .repos .repo a:active {
+	color: #999999;
+	text-decoration: none;
+}
+
+section .repos .repo a:hover {
+	color: #FF0002;
+}
+
+section .repos .repo span {
+	margin-left: auto;
+}
+
+section .repos .repo span a {
+	margin-left: 5px;
+}
+
+section .repos .repo .info {
+	display: flex;
+	flex-direction: row;
+	font-size: 16px;
+}
+
+section .repos .repo .info span {
+	margin: 0 20px;
+}
+
+section .repos .repo .show_stat {
+	text-align: right;
+}
+
+section .repos .repo .show_stat a,
+section .repos .repo .show_stat a:active {
+	color: #336799;
+	font-weight: 600;
+}
+
+section .repos .repo .show_stat a:hover {
+	color: #FF0002;
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"></meta>
+    <title>ProStats - Stats</title>
+    <link rel="shortcut icon" href="images/icon.ico" >
+    <link rel="stylesheet" type="text/css" href="styles/header.css" />
+    <link rel="stylesheet" type="text/css" href="styles/common.css" />
+    <link rel="stylesheet" type="text/css" href="styles/footer.css" />
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="scripts/charts.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo"><span>ProStats</span></div>
+      <div class="links">
+	    <ul>
+          <li><a href="repos.html">Repos</a></li>
+          <li class="active"><a href="stats.html">Stats</a></li>
+          <li><a href="#">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section>
+      <div class="gen_stat">
+	    <ul>
+	      <li>Collaborators: <span>571</span></li>
+		  <li>Commits: <span>10,000</span></li>
+		  <li>Pull Rrequests: <span>120</span></li>
+		  <li>Issues: <span>102<span></li>
+		</ul>
+		
+		<ul>
+		  <li><h3>Top 5 Collaborators</h3></li>
+		  <li>starcodes</li>
+		  <li>markdowns</li>
+		  <li>codelord2345</li>
+		  <li>codexmax21</li>
+		  <li>procode52</li>
+		</ul>
+	  </div>
+	  <div class="gen-chart">
+	    <div class="charts-container">
+		  <div class="chart doughNut">
+		    <canvas id="genDoughChart"></canvas>
+		  </div>
+		  
+		  <div class="chart line">
+		    <canvas id="genLineChart"></canvas>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="time-chart">
+	    <h4>Last 7 days</h4>
+	    <div class="charts-container">
+		  <div class="chart">
+		    <canvas id="dailyCommit"></canvas>
+		  </div>
+		  
+		  <div class="chart">
+		    <canvas id="dailyIssues"></canvas>
+		  </div>
+		</div>
+	  
+	  <div class="time-chart">
+	    <h4>Last 8 weeks</h4>
+	    <div class="charts-container">
+		  <div class="chart">
+		    <canvas id="weeklyCommit"></canvas>
+		  </div>
+		  
+		  <div class="chart">
+		    <canvas id="weeklyIssues"></canvas>
+		  </div>
+		</div>
+	  
+	  <div class="time-chart">
+	    <h4>Last 12 months</h4>
+	    <div class="charts-container">
+		  <div class="chart">
+		    <canvas id="monthlyCommit"></canvas>
+		  </div>
+		  
+		  <div class="chart">
+		    <canvas id="monthlyIssues"></canvas>
+		  </div>
+		</div>
+	  </div>
+    </section>
+
+    <footer>
+      <div id="logo"><span>ProStats</span></div>
+      <a href="#">Logout</a>
+    </footer>
+  </body>
+</html>
