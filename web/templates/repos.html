@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"></meta>
+    <title>ProStats - Repos</title>
+    <link rel="shortcut icon" href="../static/images/icon.ico" >
+    <link rel="stylesheet" type="text/css" href="../static/styles/header.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/common.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/repo.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/footer.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="logo"><span>ProStats</span></div>
+      <div class="links">
+	<ul>
+          <li class="active"><a href="{{ url_for('app_views.repos', user_id=current_user.id) }}">Repos</a></li>
+          <li><a href="stats.html">Stats</a></li>
+	  <li><a href="{{ url_for('app_views.logout') }}">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section>
+	  <div class="sec_header">
+	    <h2>Repositories</h2>
+		<span>
+		  <a href="">Add New</a>
+		</span>
+	  </div>
+	  
+      <div class="repos">
+	    <div class="repo">
+		  <div class="title">
+		    <h4>ZicRealty</h4>
+			<span>
+		      <a href="">Edit</a>
+		      <a href="">Delete</a>
+		    </span>
+		  </div>
+		  <div class="info">
+		    <span><b>Owner:</b> starcodes</span>
+		    <span><b>Commits:</b> 1,500</span>
+		    <span><b>Pull Request:</b> 100</span>
+		  </div>
+		  <div class="show_stat">
+		    <a href="#">Stats</a>
+		  </div>
+		</div>
+	  
+      <div class="repos">
+	    <div class="repo">
+		  <div class="title">
+		    <h4>ZicRealty</h4>
+			<span>
+		      <a href="">Edit</a>
+		      <a href="">Delete</a>
+		    </span>
+		  </div>
+		  <div class="info">
+		    <span><b>Owner:</b> starcodes</span>
+		    <span><b>Commits:</b> 1,500</span>
+		    <span><b>Pull Request:</b> 100</span>
+		  </div>
+		  <div class="show_stat">
+		    <a href="#">Stats</a>
+		  </div>
+		</div>
+	  
+      <div class="repos">
+	    <div class="repo">
+		  <div class="title">
+		    <h4>ZicRealty</h4>
+			<span>
+		      <a href="">Edit</a>
+		      <a href="">Delete</a>
+		    </span>
+		  </div>
+		  <div class="info">
+		    <span><b>Owner:</b> starcodes</span>
+		    <span><b>Commits:</b> 1,500</span>
+		    <span><b>Pull Request:</b> 100</span>
+		  </div>
+		  <div class="show_stat">
+		    <a href="#">Stats</a>
+		  </div>
+		</div>
+	  
+      <div class="repos">
+	    <div class="repo">
+		  <div class="title">
+		    <h4>ZicRealty</h4>
+			<span>
+		      <a href="">Edit</a>
+		      <a href="">Delete</a>
+		    </span>
+		  </div>
+		  <div class="info">
+		    <span><b>Owner:</b> starcodes</span>
+		    <span><b>Commits:</b> 1,500</span>
+		    <span><b>Pull Request:</b> 100</span>
+		  </div>
+		  <div class="show_stat">
+		    <a href="#">Stats</a>
+		  </div>
+		</div>
+	  </div>
+    </section>
+
+    <footer>
+      <div id="logo"><span>ProStats</span></div>
+      <a href="{{ url_for('app_views.logout') }}">Logout</a>
+    </footer>
+  </body>
+</html>

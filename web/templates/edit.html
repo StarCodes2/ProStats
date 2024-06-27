@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8"></meta>
     <title>ProStats - Edit Repo</title>
-    <link rel="shortcut icon" href="images/icon.ico" >
-    <link rel="stylesheet" type="text/css" href="styles/header.css" />
-    <link rel="stylesheet" type="text/css" href="styles/common.css" />
-    <link rel="stylesheet" type="text/css" href="styles/forms.css" />
-    <link rel="stylesheet" type="text/css" href="styles/footer.css" />
+    <link rel="shortcut icon" href="../static/images/icon.ico" >
+    <link rel="stylesheet" type="text/css" href="../static/styles/header.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/common.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/forms.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/footer.css" />
   </head>
 
   <body>
@@ -28,13 +28,13 @@
         <div class="form">
 	      <form id="signup">
 		    <label for="projectName">Project Name:</label>
-		    <input type="text" id="projectName" value="ZicRealty" />
+		    <input type="text" id="projectName" name="name" value="ZicRealty" />
 
 		    <label for="repositoryOwner">Repository Owner:</label>
-		    <input type="text" id="repositoryOwner" value="starcodes" />
+		    <input type="text" id="repositoryOwner" name="owner" value="starcodes" />
 
 		    <label for="githubLink">GitHub Repo Link:</label>
-		    <input type="text" id="githubLink" value="https://github.com/starcodes/ZicRealty" />
+		    <input type="text" id="githubLink" name="link" value="https://github.com/starcodes/ZicRealty" />
 
             <span class="radio">
 			  <input type="radio" id="public" name="privacy" value="public" />
@@ -44,7 +44,7 @@
 			</span>
 
 		    <label for="pat">Personal Access Token:</label>
-		    <input type="text" id="pat" value="Ghygwy35fffsgfu4rtt5yHGBhf" />
+		    <input type="text" id="pat" name="pt" value="Ghygwy35fffsgfu4rtt5yHGBhf" />
 			<span>
 		      <button type="submit">Save</button>
 		      <button class="btn-cancel" type="cancel">Cancel</button>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"></meta>
+    <title>ProStats - Sign Up</title>
+    <link rel="shortcut icon" href="../static/images/icon.ico" >
+    <link rel="stylesheet" type="text/css" href="../static/styles/header.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/common.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/forms.css" />
+    <link rel="stylesheet" type="text/css" href="../static/styles/footer.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="logo"><span>ProStats</span></div>
+      <div class="links">
+	<ul>
+          <li><a href="{{ url_for('app_views.login') }}">Login</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <section>
+      <div class="form">
+        <h3>Sign Up</h3>
+        <form id="signup" action="{{ url_for('app_views.create_user') }}" method="post">
+	  {% if msg %}
+          <span>{{ msg }}</span>
+	  {% endif %}
+	  {% if data %}
+	  <input type="text" name="first_name" value="{{ data['first_name'] }}" placeholder="Firstname" />
+          <input type="text" name="last_name" value="{{ data['last_name'] }}" placeholder="Lastname" />
+          <input type="text" name="email" value="{{ data['email'] }}" placeholder="Email" />
+          <input type="password" name="password" value="{{ data['password'] }}" placeholder="Password" />
+	  {% else %}
+          <input type="text" name="first_name" placeholder="Firstname" />
+	  <input type="text" name="last_name" placeholder="Lastname" />
+	  <input type="text" name="email" placeholder="Email" />
+	  <input type="password" name="password" placeholder="Password" />
+	  {% endif %}
+	  <a href="{{ url_for('app_views.login') }}">Already registered?</a>
+          <button type="submit">Sign Up</button>
+	</form>
+      </div>
+    </section>
+
+    <footer>
+      <div id="logo"><span>ProStats</span></div>
+      <a href="{{ url_for('app_views.login') }}">Login</a>
+    </footer>
+  </body>
+</html>

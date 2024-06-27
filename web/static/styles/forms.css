@@ -1,0 +1,134 @@
+section .form {
+	width: 300px;
+	margin: 50px auto;
+	padding: 30px 20px;
+	border: 1px solid #336799;
+	border-radius: 5px;
+}
+
+section .form h3 {
+	margin: 0;
+	font-size: 30px;
+	text-align: center;
+}
+
+section .form form {
+	display: flex;
+	flex-direction: column;
+}
+
+section .form input {
+	height: 30px;
+	font-size: 16px;
+	text-indent: 10px;
+	margin-top: 10px;
+	border: 1px solid #696969;
+	border-radius: 5px;
+}
+
+section .form button {
+	width: 150px;
+	height: 30px;
+	font-size: 14px;
+	color: #FFFFFF;
+	background-color: #336799;
+	border: none;
+	border-radius: 5px;
+	margin: 10px auto;
+	padding: auto;
+}
+
+section .form button:hover {
+	background: #FF0002;
+}
+
+section .form a, section .form a:active {
+	font-size: 12px;
+	margin-top: 3px;
+	text-decoration: none;
+}
+
+section .form a:hover {
+	color: #FF0002;
+}
+
+/* Add New Repo form */
+#add {
+	display: flex;
+	flex-direction: row;
+}
+
+#add .form {
+	width: 600px;
+	border: none;
+	margin: 0;
+}
+
+#add .form label {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 10px 0 5px 0;
+}
+
+#add .form input {
+	margin: 0;
+}
+
+#add .form input[type="radio"] {
+	width: 20px;
+	height: 20px;
+	margin: 20px 0;
+}
+
+#add .form .radio {
+	display: flex;
+	flex-direction: row;
+	margin: 0;
+	align-items: center;
+}
+
+#add .form .radio label[for="public"],
+#add .form .radio label[for="private"] {
+	margin-left: 5px;
+	margin-right: 15px;
+}
+
+#add .form span {
+	margin: 20px auto;
+}
+
+#add .form span button {
+	width: 100px;
+	margin: 0 2px;
+}
+
+#add .form span .btn-cancel {
+	color: #666666;
+	background-color: #FFFFFF;
+	border: 2px solid #696969;
+}
+
+#add .form span .btn-cancel:hover {
+	color: #FFFFFF;
+	background-color: #FF0002;
+	border: none;
+}
+
+/* Note */
+#add .note {
+	width: 400px;
+	height: 100px;
+	margin: 0 20px;
+	padding: 20px;
+	border: 1px solid #696969;
+	margin-left: auto;
+}
+
+#add .note h3 {
+	margin: 0 0 10px 0;
+}
+
+#add .note p {
+	text-align: justify;
+	margin: 0;
+}

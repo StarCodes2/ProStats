@@ -22,17 +22,17 @@ class DBStorage:
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        HBNB_MYSQL_USER = getenv('HBNB_MYSQL_USER')
-        HBNB_MYSQL_PWD = getenv('HBNB_MYSQL_PWD')
-        HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
-        HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
-        HBNB_ENV = getenv('HBNB_ENV')
+        MYSQL_USER = getenv('MYSQL_USER')
+        MYSQL_PWD = getenv('MYSQL_PWD')
+        MYSQL_HOST = getenv('MYSQL_HOST')
+        MYSQL_DB = getenv('MYSQL_DB')
+        ENV = getenv('ENV')
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(HBNB_MYSQL_USER,
-                                             HBNB_MYSQL_PWD,
-                                             HBNB_MYSQL_HOST,
-                                             HBNB_MYSQL_DB))
-        if HBNB_ENV == "test":
+                                      format(MYSQL_USER,
+                                             MYSQL_PWD,
+                                             MYSQL_HOST,
+                                             MYSQL_DB))
+        if ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -99,3 +99,12 @@ class DBStorage:
             count = len(models.storage.all(cls).values())
 
         return count
+
+    def getByValue(self, cls, name, value):
+        """ Find an object using attribute and value """
+        for clss in classes:
+            if cls is classes[clss] or cls is clss:
+                obj = self.__session.query(classes[clss]).filter_by(email=value).first()
+                return obj
+        return None
+
