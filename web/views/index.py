@@ -62,7 +62,7 @@ def login():
         user = storage.getByValue(User, 'email', email)
         if user and user.password == password:
             login_user(user)
-            return redirect(url_for('app_views.repos', user_id=user.id))
+            return redirect(url_for('app_views.repos'))
         return render_template('login.html',
                                msg='Wrong email or password')
     elif request.method == 'GET':

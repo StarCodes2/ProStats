@@ -4,7 +4,7 @@ import models
 from models.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String, Boolean, ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 
 
 class Repository(BaseModel, Base):
@@ -12,16 +12,17 @@ class Repository(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'repositories'
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
-        project_name = Column(String(128), nullable=False)
-        repo_link = Column(String(1024), nullable=False)
-        public = Column(Boolean, nullable=False, default=True)
+        name = Column(String(128), nullable=False)
+        owner = Column(String(128), nullable=False)
+        link = Column(String(1024), nullable=False)
+        privacy = Column(String(8), nullable=False, default="public")
         pat = Column(String(60), nullable=True)
     else:
         user_id = ""
-        project_name = ""
+        name = ""
         owner = ""
-        repo_link = 0
-        public = False
+        link = 0
+        privacy = False
         pat = ""
 
     def __init__(self, *args, **kwargs):

@@ -3,44 +3,55 @@
 from models import storage
 from models.repository import Repository
 from models.user import User
-from flask import abort, render_template, request
+from flask import abort, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
 from web.views import app_views
 
 
-@app_views.route('/repos/<user_id>', methods=['GET', 'POST'],
+@app_views.route('/repos', methods=['GET'],
                  strict_slashes=False)
 @login_required
-def repos(user_id=None):
-    """ Retrieves all repositories or creates a new one. """
-    if request.method == 'GET' and user_id is not None:
-        user = storage.get(User, user_id)
-        if not user or user_id != current_user.id:
-            abort(404)
+def repos():
+    """ Retrieves all repositories related to a user. """
+    repos = [repo for repo in current_user.repos]
+    return render_template('repos.html', repos=repos)
 
-        repos = [repo for repo in user.repos]
-        return render_template('repos.html', repos=repos)
+@app_views.route('/add_repo', methods=['GET', 'POST'], strict_slashes=False)
+@login_required
+def addRepo():
+    if request.method == 'GET':
+        return render_template('add.html')
     elif request.method == 'POST':
-        if not request.form['name']:
-            abort(400, 'Project name missing')
-        if not request.form['owner']:
-            about(400, 'Project owner name missing')
-        if not request.form['link']:
-            abort(400, 'Repository lin missing')
-        if not request.form['privacy']:
-            abort(400, 'Privacy option missing')
-        if request.form['privacy'] == 'private' and not request.form['pat']:
-            abort(400, 'Personal Access Tokens are necessary for \
-                  private repository')
-        user = storage.get(User, user_id)
-        if not user or user_id != current_user.id:
-            abort(404)
-
-        data = request.form
-        data['user_id'] = user_id
-        newRepo = Repository(**data)
+        if not request.form:
+            return render_template('add.html')
+        if not request.form['name'] or request.form['name'] == "":
+            return render_template('add.html',
+                                   data=request.form,
+                                   msg='Project name missing')
+        if not request.form['owner'] or request.form['owner'] == "":
+            return render_template('add.html',
+                                   data=request.form,
+                                   msg='Project owner name missing')
+        if not request.form['link'] or request.form['link'] == "":
+            return render_template('add.html',
+                                   data=request.form,
+                                   msg='Repository link missing')
+        if not request.form['privacy'] or request.form['privacy'] == "":
+            return render_template('add.html',
+                                   data=request.form,
+                                   msg='Privacy option missing')
+        if request.form['privacy'] == "private" and request.form['pat'] == "":
+            return render_template('add.html',
+                                   data=request.form,
+                                   msg='Personal Access Tokens are necessary for \
+                                        private repository')
+        data = request.form.to_dict()
+        data['user_id'] = current_user.id
+        newRepo = Repository()
+        for key, value in data.items():
+            setattr(newRepo, key, value)
         newRepo.save()
-        return render_template('repo.html', repos=user.repos.values())
+        return redirect(url_for('app_views.repos'))
 
 
 @app_views.route('/stats/<repo_id>', methods=['GET'], strict_slashes=False)
@@ -53,20 +64,23 @@ def stats(repo_id):
     return render_template('stats.html', repo=repo)
 
 
-@app_views.route('/repo/<repo_id>/edit', methods=['GET', 'POST'],
+@app_views.route('/edit_repo/<repo_id>', methods=['GET', 'POST'],
            strict_slashes=False)
 @login_required
 def editRepo(repo_id):
     """ Edits a repository """
-    repo = storage.get(Repository, repo_id)
+    repos = current_user.repos
+    if not repos:
+        return redirect(url_for('app_views.repos'))
+    for rep in repos:
+        if rep.id == repo_id:
+            repo = rep
     if not repo:
-        abort(404)
-    if current_user.id != repo.user_id:
-        abort(404)
+        return redirect(url_for('app_views.repos'))
     if request.method == 'GET':
-        return render_template('edit.html', repo=repo)
+        return render_template('edit.html', data=repo)
     elif request.method == 'POST':
-        pass
+         pass
 
 
 @app_views.route('/repo/<repo_id>/delete', methods=['GET'],
@@ -82,4 +96,4 @@ def deleteRepo(repo_id):
     storage.delete(repo)
     storage.save()
 
-    return render_template('repos.html', repos=repos)
+    return redirect(url_for('app_views.repos'))
