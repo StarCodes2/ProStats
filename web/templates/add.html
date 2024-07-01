@@ -25,16 +25,19 @@
       <h2>Add New Repository</h2>
       <div id="add">
         <div class="form">
+        {% if msg %}
+	  <span>{{ msg }}</span>
+	{% endif %}
           {% if data %}
           <form id="signup" action="{{ url_for('app_views.addRepo') }}" method="post">
             <label for="projectName">Project Name:</label>
 	    <input type="text" id="projectName" name="name" value="{{ data['name'] }}" />
 
-            <label for="repositoryOwner">Repository Owner:</label>
+            <label for="repositoryOwner">GitHub Username:</label>
 	    <input type="text" id="repositoryOwner" name="owner" value="{{ data['owner'] }}" />
 
-            <label for="githubLink">GitHub Repo Link:</label>
-	    <input type="text" id="githubLink" name="link" value="{{ data['link'] }}" />
+	    <label for="githubRepoName">GitHub Repository Name:</label>
+	    <input type="text" id="githubRepoName" name="repo_name" value="{{ data['repo_name'] }}" />
 
             <span class="radio">
             {% if data['privacy'] == "public" %}
@@ -61,10 +64,10 @@
 	  {% else %}
 	  <form id="signup" action="{{ url_for('app_views.addRepo') }}" method="post">                                              <label for="projectName">Project Name:</label>
             <input type="text" id="projectName" name="name" />
-	    <label for="repositoryOwner">Repository Owner:</label>
+	    <label for="repositoryOwner">GitHub Username:</label>
 	    <input type="text" id="repositoryOwner" name="owner" />
-	    <label for="githubLink">GitHub Repo Link:</label>
-            <input type="text" id="githubLink" name="link" />
+	    <label for="githubRepoName">GitHub Repository Name:</label>
+            <input type="text" id="githubRepoName" name="repo_name" />
 
             <span class="radio">
               <input type="radio" id="public" name="privacy" value="public" />

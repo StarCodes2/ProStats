@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ Starts a Flash Web Application """
+import re
 from models import storage
 from models.repository import Repository
 from models.user import User
@@ -20,6 +21,9 @@ def index():
 @app_views.route('/signup', methods=['GET', 'POST'], strict_slashes=False)
 def create_user():
     """ Creates a new user or return the signup page. """
+    if current_user:
+        return redirect(url_for('app_views.repos'))
+
     if request.method == 'GET':
         return render_template('signup.html')
     elif request.method == 'POST':
@@ -39,6 +43,23 @@ def create_user():
                                        data=data,
                                        msg="All fields are required")
 
+            if not is_valid_email(data['email']):
+                return render_template('signup.html',
+                                       data=data,
+                                       msg="Invalid email address")
+
+            if not is_valid_password(data['password']):
+                msg = "Password must be at least 8 characters long and \
+                        contain both letters and numbers"
+                return render_template('signup.html',
+                                       data=data,
+                                       msg=msg)
+
+            if data['password'] != data['re-enter']:
+                return render_template('signup.html',
+                                       data=data,
+                                       msg="Passwords do not match!")
+
             new = User()
             for key, value in data.items():
                 if key != "password":
@@ -52,6 +73,9 @@ def create_user():
 @app_views.route('/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     """ User Login """
+    if current_user:
+        return redirect(url_for('app_views.repos'))
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -75,3 +99,16 @@ def logout():
     """ Log's a user out """
     logout_user()
     return redirect(url_for('app_views.login'))
+
+
+def is_valid_email(email):
+    """ Checks if email matches an actual email format. """
+    email_pattern = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+$')
+    return email_pattern.match(email) is not None
+
+
+def is_valid_password(password):
+    """ Checks if password meets requirement """
+    pass_pattern = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+    return pass_pattern.match(password) is not None
+

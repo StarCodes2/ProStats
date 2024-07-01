@@ -31,12 +31,14 @@
 	  <input type="text" name="first_name" value="{{ data['first_name'] }}" placeholder="Firstname" />
           <input type="text" name="last_name" value="{{ data['last_name'] }}" placeholder="Lastname" />
           <input type="text" name="email" value="{{ data['email'] }}" placeholder="Email" />
-          <input type="password" name="password" value="{{ data['password'] }}" placeholder="Password" />
+          <input type="password" name="password" placeholder="Password" />
+	  <input type="password" name="re-enter" placeholder="Re-enter Password" />
 	  {% else %}
           <input type="text" name="first_name" placeholder="Firstname" />
 	  <input type="text" name="last_name" placeholder="Lastname" />
 	  <input type="text" name="email" placeholder="Email" />
 	  <input type="password" name="password" placeholder="Password" />
+	  <input type="password" name="re-enter" placeholder="Re-enter Password" />
 	  {% endif %}
 	  <a href="{{ url_for('app_views.login') }}">Already registered?</a>
           <button type="submit">Sign Up</button>

@@ -31,22 +31,22 @@
 	  
       <div class="repos">
       {% if repos %}
-        {% for repo in repos %}
+        {% for repo in repos.values() %}
 	<div class="repo">
           <div class="title">
             <h4>{{ repo.name }}</h4>
             <span>
-              <a href="{{ url_for('app_views.editRepo', repo_id=repo.id) }}">Edit</a>
-	      <a href="{{ url_for('app_views.deleteRepo', repo_id=repo.id) }}">Delete</a>
+              <a href="{{ url_for('app_views.editRepo', repo_id=repo['id']) }}">Edit</a>
+	      <a href="{{ url_for('app_views.deleteRepo', repo_id=repo['id']) }}">Delete</a>
             </span>
           </div>
           <div class="info">
-            <span><b>Owner:</b> {{ repo.owner }}</span>
-            <span><b>Commits:</b> 1,500</span>
-            <span><b>Pull Request:</b> 100</span>
+            <span><b>Owner:</b> {{ repo['owner'] }}</span>
+	    <span><b>Commits:</b> {{ repo['total_commits'] }}</span>
+            <span><b>Pull Request:</b> {{ repo['total_pull'] }}</span>
           </div>
           <div class="show_stat">
-            <a href="{{ url_for('app_views.stats', repo_id=repo.id) }}">Stats</a>
+            <a href="{{ url_for('app_views.stats', repo_id=repo['id']) }}">Stats</a>
           </div>
         </div>
 	{% endfor %}
