@@ -93,7 +93,7 @@ $(document).ready(function () {
 	];
 	var label = 'Total Commits';
 	var data = [12, 19, 3, 5, 2, 3];
-	var genDoughChart = doughnutChart(labels, label, data, $('#genDoughChart'));
+	//var genDoughChart = doughnutChart(labels, label, data, $('#genDoughChart'));
 	
 	const year = [2012, 2013, 2014, 2015, 2016, 2017, 2018];
 	data = [12, 19, 3, 5, 2, 3, 10];

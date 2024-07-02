@@ -95,21 +95,6 @@ def addRepo():
         return redirect(url_for('app_views.repos'))
 
 
-@app_views.route('/stats/<repo_id>', methods=['GET'], strict_slashes=False)
-@login_required
-def stats(repo_id):
-    """ Handles all actions that an be performed on a single repo """
-    repos = current_user.repos
-    for obj in repos:
-        if obj.id == repo_id:
-            repo = obj
-    if not repo:
-        return redirect('app_views.repos')
-    url = "".format()
-
-    return render_template('stats.html', repo=repo)
-
-
 @app_views.route('/edit_repo/<repo_id>', methods=['GET', 'POST'],
            strict_slashes=False)
 @login_required

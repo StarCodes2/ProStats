@@ -58,7 +58,7 @@
 
             <span>
               <button type="submit">Save</button>
-              <button class="btn-cancel" type="cancel">Cancel</button>
+	      <button class="btn-cancel" type="cancel" onclick="window.location.href='{{ url_for('app_views.repos') }}'">Cancel</button>
             </span>
           </form>
 	  {% else %}
@@ -81,7 +81,7 @@
 
             <span>
               <button type="submit">Save</button>
-              <button class="btn-cancel" type="cancel">Cancel</button>
+	      <button class="btn-cancel" type="cancel" onclick="window.location.href='{{ url_for('app_views.repos') }}'">Cancel</button>
             </span>
           </form>
 	  {% endif %}
