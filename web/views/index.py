@@ -21,7 +21,7 @@ def index():
 @app_views.route('/signup', methods=['GET', 'POST'], strict_slashes=False)
 def create_user():
     """ Creates a new user or return the signup page. """
-    if current_user:
+    if current_user.is_authenticated:
         return redirect(url_for('app_views.repos'))
 
     if request.method == 'GET':
