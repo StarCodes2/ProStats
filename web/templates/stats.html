@@ -104,8 +104,9 @@
     </footer>
 
     <script>
+      // Contributors Doughnut chart and total commits Line chart
       {% if top_c %}
-      var t = JSON.parse({{ top_c|tojson }});
+      const t = JSON.parse({{ top_c|tojson }});
       var labels = t['names'];
       var data = t['commits'];
       {% else %}
@@ -114,6 +115,23 @@
       {% endif %}
       var label = 'Total Contributions';
       var genDoughChart = doughnutChart(labels, label, data, $('#genDoughChart'));
+
+      {% if all_time %}
+      const all = JSON.parse({{ all_time|tojson }});
+      labels = all['days'];
+      data = all['commits'];
+      {% endif %}
+      label = 'Total No of Commits';
+      var genLineChart = lineChart(labels, label, data, $('#genLineChart'));
+
+      // Commits for last 7 days
+      {% if week %}
+      const all_week = JSON.parse({{ week|tojson }});
+      labels = all_week['days'];
+      data = all_week['commits'];
+      {% endif %}
+      label = 'Daily Commits';
+      var dailyCommit = lineChart(labels, label, data, $('#dailyCommit'));
     </script>
   </body>
 </html>

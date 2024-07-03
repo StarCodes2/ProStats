@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ Handles the repo and stats page requests. """
+from collections import defaultdict
+from datetime import datetime, timedelta
 from models import storage
 from models.repository import Repository
 from models.user import User
@@ -44,8 +46,10 @@ def stats(repo_id):
            &per_page=100".format(repo.owner, repo.repo_name)
     contributors = get_stats(url, headers)
     top_c = {}
+    d_commits = {}
+    week_c = {}
     total_c = 0
-    commits = 0
+    t_commits = 0
     pull = 0
     if contributors and len(contributors) != 0:
         total_c = len(contributors)
@@ -53,7 +57,6 @@ def stats(repo_id):
         c = []
         count = 0
         for contri in contributors:
-            commits += contri['contributions']
             if count <= 5:
                 name.append(contri['login'])
                 c.append(contri['contributions'])
@@ -63,16 +66,52 @@ def stats(repo_id):
                 c[-1] += contri['contributions']
         top_c['names'] = name
         top_c['commits'] = c
+        del contributors
 
-    url = "https://api.github.com/repos/{}/{}/contributors?state=all\
+    # All commits from the first commit date to the curent date
+    daily_commits = defaultdict(int)
+    url = "https://api.github.com/repos/{}/{}/commits?per_page=100"\
+          .format(repo.owner, repo.repo_name)
+    commits = get_stats(url, headers)
+
+    for commit in commits:
+        c_date = datetime.strptime(commit['commit']['committer']['date'],
+                "%Y-%m-%dT%H:%M:%SZ").date()
+        daily_commits[c_date] += 1
+        t_commits += 1
+
+    if commits:
+        first_date = min(daily_commits.keys())
+        last_date = datetime.now().date()
+        all_dates = [first_date + timedelta(days=i) for i in\
+                     range((last_date - first_date).days + 1)]
+        for date in all_dates:
+            if date not in daily_commits:
+                daily_commits[date] = 0
+        daily_commits = dict((sorted(daily_commits.items())))
+        d = [key.strftime("%Y-%m-%d") for key in daily_commits.keys()]
+        c = [count for count in daily_commits.values()]
+        d_commits['days'] = d
+        d_commits['commits'] = c
+
+        # Commits for the last 7 days
+        week_list = list(daily_commits.items())[-7:]
+        week_commits = dict(week_list)
+        d = [key.strftime("%m-%d") for key in week_commits.keys()]
+        c = [count for count in week_commits.values()]
+        week_c['days'] = d
+        week_c['commits'] = c
+
+    # Returns all issues
+    url = "https://api.github.com/repos/{}/{}/issues?state=all\
            &per_page=100".format(repo.owner, repo.repo_name)
 
-    """Returns commits for the last 52 weeks."""
+    # Returns commits for the last 52 weeks.
     url = "https://api.github.com/repos/{}/{}/stats/participation"\
           .format(repo.owner, repo.repo_name)
 
     data = {
-        "commits": commits,
+        "commits": t_commits,
         "pull": pull,
         "total_c": total_c,
         "names": name
@@ -80,7 +119,9 @@ def stats(repo_id):
 
     return render_template('stats.html',
                            data=data,
-                           top_c=json.dumps(top_c))
+                           all_time=json.dumps(d_commits),
+                           top_c=json.dumps(top_c),
+                           week=json.dumps(week_c))
 
 
 def get_stats(url, headers):

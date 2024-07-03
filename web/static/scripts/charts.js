@@ -29,10 +29,11 @@ function lineChart(labels, label, data, ctx) {
       datasets: [{
         label: label,
         data: data,
-		backgroundColor: 'rgb(75, 192, 192)',
-		borderColor: 'rgb(75, 192, 192)',
+	backgroundColor: 'rgba(75, 192, 192, 0.8)',
+        fill: true,
+	borderColor: 'rgb(54, 162, 235)',
         borderWidth: 2,
-		tension: 0.1
+	tension: 0.1
       }]
     },
     options: {
@@ -98,7 +99,7 @@ $(document).ready(function () {
 	const year = [2012, 2013, 2014, 2015, 2016, 2017, 2018];
 	data = [12, 19, 3, 5, 2, 3, 10];
 	label = 'Total No of Commits';
-	var genLineChart = lineChart(year, label, data, $('#genLineChart'));
+	//var genLineChart = lineChart(year, label, data, $('#genLineChart'));
 	
 	// Last 7 days Line and Bar charts
 	labels = [
@@ -112,7 +113,7 @@ $(document).ready(function () {
 	];
 	data = [10, 15, 2, 3, 1, 11, 8];
 	label = 'Daily Commits';
-	var dailyCommit = lineChart(labels, label, data, $('#dailyCommit'));
+	//var dailyCommit = lineChart(labels, label, data, $('#dailyCommit'));
 	
 	data = [[10, 15, 2, 3, 1, 11, 8], [2, 4, 6, 8, 4, 3, 6]];
 	label = ['Closed Issues', 'Open Issues'];
