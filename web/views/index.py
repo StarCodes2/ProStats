@@ -13,7 +13,6 @@ from web.views import app_views
 
 @app_views.route('/', strict_slashes=False)
 @app_views.route('/index', strict_slashes=False)
-@login_required
 def index():
     """ Returns the landing page. """
     return render_template('index.html')

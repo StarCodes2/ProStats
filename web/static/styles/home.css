@@ -1,0 +1,165 @@
+#cover {
+	color: #FFFFFF;
+	margin: 0;
+	padding: 5% 10%;
+	height: 400px;
+	background: url("../images/coverblue.jpg") no-repeat center center / cover;
+	text-align: center;
+	align-content: center;
+}
+
+#cover div {}
+
+#cover div h2 {
+	color : #FFFFFF;
+	font-size: 40px;
+	margin: 0 auto;
+}
+
+#cover div h1 {
+	color: #FFFFFF;
+	font-size: 80px;
+	margin: 0 auto;
+}
+
+#cover div p {
+	margin: 0 0 50px 0;
+}
+
+#cover div a,
+#about > div > div > a,
+#cover div a:active,
+#about > div > div > a:active {
+	font-size: 15px;
+	color: #FFFFFF;
+	background-color: #FF0002;
+	padding: 10px 20px;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+#cover div a:hover,
+#about > div > div > a:hover {
+	background-color: #F00000;
+}
+
+section div h2 {
+	text-align: center;
+	margin: 0;
+	margin-bottom: 20px;
+	font-size: 30px;
+}
+
+section .container {
+	margin: 50px 20px;
+}
+
+section div .intro {
+	padding: 0 10%;
+}
+
+section div .intro hr {
+	color: #F00000;
+	border-color: #F00000;
+}
+
+section div .intro p {
+	text-align: center;
+	font-size: 20px;
+}
+
+#feats{
+	margin: 0;
+	padding: 2% 10%;
+	background: url("../images/feat.jpg") no-repeat fixed center center / cover;
+}
+
+#feats h2 {
+	color: #FFFFFF;
+}
+
+#feats div .feat {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5%;
+	padding: 0 5%;
+}
+
+#feats div .feat .item {
+	flex: 0 0 30%;
+	background-color: #FFFFFF;
+	text-align: center;
+	border-radius: 5px;
+}
+
+#feats div .feat .item h4 {
+	color: #336799;
+	margin: 10px 10px;
+}
+
+#feats div .feat .item p {
+	margin: 0 10px 30px 10px;
+}
+
+#feats div .feat .item img {
+	width: 100%;
+	border-radius: 5px 5px 0 0;
+}
+
+#about div div p {
+	font-size: 18px;
+	text-align: justify;
+}
+
+#about div div h3 {
+	font-size: 24px;
+	margin: 40px 0 10px 0;
+}
+
+#about div div .dev {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+#about div div .dev h4 {
+	color: #336799;
+	margin: 5px 0 0 0;
+}
+
+#about div div .dev h5 {
+	margin: 0 0 5px 0;
+}
+
+#about div div .dev .social {
+	list-style-type: none;
+	margin: 0 10px;
+	padding: 0;
+}
+
+#about div div .dev .social li a {
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+}
+
+#about div div .dev .social .linked {
+	width: 30px;
+	height: 30px;
+	background: url("../images/linkedin.png") no-repeat;
+	margin-bottom: 10px;
+}
+
+#about div div .dev .social .github {
+	width: 30px;
+	height: 30px;
+	background: url("../images/github.png") no-repeat;
+	margin-bottom: 10px;
+}
+
+#about div div .dev .social .twitter {
+	width: 30px;
+	height: 30px;
+	background: url("../images/x.png") no-repeat;
+	margin-bottom: 10px;
+}
