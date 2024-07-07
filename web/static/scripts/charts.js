@@ -117,7 +117,7 @@ $(document).ready(function () {
 	
 	data = [[10, 15, 2, 3, 1, 11, 8], [2, 4, 6, 8, 4, 3, 6]];
 	label = ['Closed Issues', 'Open Issues'];
-	var dailyIssues = barChart(labels, label, data, $('#dailyIssues'));
+	//var dailyIssues = barChart(labels, label, data, $('#dailyIssues'));
 	
 	// Last 8 weeks Line and Bar charts
 	labels = [

@@ -30,7 +30,7 @@
           <li>Contributors: <span>{{ data['total_c'] }}</span></li>
 	  <li>Commits: <span>{{ data['commits'] }}</span></li>
 	  <li>Pull Rrequests: <span>{{ data['pull'] }}</span></li>
-          <li>Issues: <span>102<span></li>
+	  <li>Issues: <span>{{ data['total_issues'] }}<span></li>
         </ul>
 
         <ul>
@@ -132,6 +132,15 @@
       {% endif %}
       label = 'Daily Commits';
       var dailyCommit = lineChart(labels, label, data, $('#dailyCommit'));
+
+      // Issues for last 7 days
+      {% if d_issues %}
+      const all_week_i = JSON.parse({{ d_issues|tojson }});
+      labels = all_week_i['date'];
+      data = [all_week_i['closed'], all_week_i['open']];
+      {% endif %}
+      label = ['closed issues', 'open issues'];
+      var dailyIssues = barChart(labels, label, data, $('#dailyIssues'));
     </script>
   </body>
 </html>
