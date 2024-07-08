@@ -88,11 +88,11 @@
         <h4>Last 12 months</h4>
         <div class="charts-container">
           <div class="chart">
-            <canvas id="monthlyCommit"></canvas>
+            <canvas id="w52Commit"></canvas>
           </div>
 
           <div class="chart">
-            <canvas id="monthlyIssues"></canvas>
+            <canvas id="w52Issues"></canvas>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
 
       {% if all_time %}
       const all = JSON.parse({{ all_time|tojson }});
-      labels = all['days'];
+      labels = all['dates'];
       data = all['commits'];
       {% endif %}
       label = 'Total No of Commits';
@@ -127,7 +127,7 @@
       // Commits for last 7 days
       {% if week %}
       const all_week = JSON.parse({{ week|tojson }});
-      labels = all_week['days'];
+      labels = all_week['dates'];
       data = all_week['commits'];
       {% endif %}
       label = 'Daily Commits';
@@ -136,11 +136,47 @@
       // Issues for last 7 days
       {% if d_issues %}
       const all_week_i = JSON.parse({{ d_issues|tojson }});
-      labels = all_week_i['date'];
+      labels = all_week_i['dates'];
       data = [all_week_i['closed'], all_week_i['open']];
       {% endif %}
       label = ['closed issues', 'open issues'];
       var dailyIssues = barChart(labels, label, data, $('#dailyIssues'));
+
+      // Commits for last 8 weeks
+      {% if w_commits %}
+      const weekly_c = JSON.parse({{ w_commits|tojson }});
+      labels = weekly_c['dates'];
+      data = weekly_c['commits'];
+      {% endif %}
+      label = 'Weekly Commits';
+      var weeklyCommit = lineChart(labels, label, data, $('#weeklyCommit'));
+
+      // Issues for last 8 weeks
+      {% if w_issues %}
+      const weekly_i = JSON.parse({{ w_issues|tojson }});
+      labels = weekly_i['dates'];
+      data = [weekly_i['closed'], weekly_i['open']];
+      {% endif %}
+      label = ['closed issues', 'open issues'];
+      var weeklyIssues = barChart(labels, label, data, $('#weeklyIssues'));
+
+      // Commits for last 52 weeks
+      {% if w52_commits %}
+      const w52_c = JSON.parse({{ w52_commits|tojson }});
+      labels = w52_c['dates'];
+      data = w52_c['commits'];
+      {% endif %}
+      label = 'Weekly Commits';
+      var w52Commit = lineChart(labels, label, data, $('#w52Commit'));
+
+      // Issues for last 52 weeks
+      {% if w52_issues %}
+      const w52_i = JSON.parse({{ w52_issues|tojson }});
+      labels = w52_i['dates'];
+      data = [w52_i['closed'], w52_i['open']];
+      {% endif %}
+      label = ['closed issues', 'open issues'];
+      var w52Issues = barChart(labels, label, data, $('#w52Issues'));
     </script>
   </body>
 </html>

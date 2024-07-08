@@ -45,13 +45,11 @@ def stats(repo_id):
     url = "https://api.github.com/repos/{}/{}/contributors?state=all\
            &per_page=100".format(repo.owner, repo.repo_name)
     contributors = get_stats(url, headers)
-    top_c = {}
-    d_commits = d_issues = daily_issues_all = {}
-    week_c = w_issues = w52_issues = weekly_issues_all = {}
     total_c = total_issues = 0
     t_commits = 0
     pull = 0
     name = []
+
     if contributors and len(contributors) != 0:
         total_c = len(contributors)
         c = []
@@ -64,12 +62,14 @@ def stats(repo_id):
             else:
                 name[-1] = "others"
                 c[-1] += contri['contributions']
-        top_c['names'] = name
-        top_c['commits'] = c
+        top_c = {"names": name, "commits": c}
         del contributors
+    else:
+        top_c = {"names": [], "commits": []}
 
     # All commits from the first commit date to the curent date
     daily_commits = defaultdict(int)
+    weekly_commits = defaultdict(int)
     url = "https://api.github.com/repos/{}/{}/commits?per_page=100"\
           .format(repo.owner, repo.repo_name)
     commits = get_stats(url, headers)
@@ -79,6 +79,7 @@ def stats(repo_id):
             c_date = datetime.strptime(commit['commit']['committer']['date'],
                     "%Y-%m-%dT%H:%M:%SZ").date()
             daily_commits[c_date] += 1
+            weekly_commits[week_start(c_date)] += 1
             t_commits += 1
 
         # Add missing days
@@ -88,27 +89,56 @@ def stats(repo_id):
         for date in all_dates:
             if date not in daily_commits:
                 daily_commits[date] = 0
+            if week_start(date) not in weekly_commits:
+                weekly_commits[week_start(date)] = 0
 
         # Sort and format for jsonification
-        daily_commits = dict((sorted(daily_commits.items())))
+        daily_commits = dict(sorted(daily_commits.items()))
         d = [key.strftime("%Y-%m-%d") for key in daily_commits.keys()]
         c = [count for count in daily_commits.values()]
-        d_commits['days'] = d
-        d_commits['commits'] = c
+        d_commits = {"dates": d, "commits": c}
+
+        weekly_commits = dict(sorted(weekly_commits.items()))
+        d = [key.strftime("%Y-%m-%d") for key in weekly_commits.keys()]
+        c = [count for count in weekly_commits.values()]
+        w_commits = {"dates": d, "commits": c}
 
         # Commits for the last 7 days
         week_list = list(daily_commits.items())[-7:]
         week_commits = dict(week_list)
         d = [key.strftime("%m-%d") for key in week_commits.keys()]
         c = [count for count in week_commits.values()]
-        week_c['days'] = d
-        week_c['commits'] = c
+        week_c = {"dates": d, "commits": c}
+
+        # Commits for the last 8 weeks
+        if len(weekly_commits) > 8:
+            weeks_list = list(weekly_commits.items())[-8:]
+            weeks_commits = dict(weeks_list)
+        else:
+            weeks_commits = weekly_commits
+
+        d = [key.strftime("%Y-%m-%d") for key in weeks_commits.keys()]
+        c = [count for count in weeks_commits.values()]
+        w_commits = {"dates": d, "commits": c}
+
+        # Commits for the last 52 weeks
+        if len(weekly_commits) > 52:
+            weeks_list = list(weekly_commits.items())[-52:]
+            weeks_commits = dict(weeks_list)
+        else:
+            weeks_commits = weekly_commits
+
+        d = [key.strftime("%Y-%m-%d") for key in weeks_commits.keys()]
+        c = [count for count in weeks_commits.values()]
+        w52_commits = {"dates": d, "commits": c}
     else:
-        d_commits = {"days": [], "commits": []}
-        week_c = {"days": [], "commits": []}
+        d_commits = {"dates": [], "commits": []}
+        week_c = {"dates": [], "commits": []}
+        w_commits = {"dates": [], "commits": []}
+        w52_commits = {"dates": [], "commits": []}
 
     # Returns all issues
-    url = "https://api.github.com/repos/{}/{}/issues?\
+    url = "https://api.github.com/repos/{}/{}/issues?state=all&\
            per_page=100".format(repo.owner, repo.repo_name)
     issues = get_stats(url, headers)
 
@@ -153,13 +183,13 @@ def stats(repo_id):
         weekly_closed_issues = dict((sorted(weekly_closed_issues.items())))
         d = [key.strftime("%Y-%m-%d") for key in daily_opened_issues.keys()]
         c = [count for count in daily_opened_issues.values()]
-        daily_issues_all = {"date": d, "open": c}
+        daily_issues_all = {"dates": d, "open": c}
         c = [count for count in daily_closed_issues.values()]
         daily_issues_all['closed'] = c
 
         d = [key.strftime("%Y-%m-%d") for key in weekly_opened_issues.keys()]
         c = [count for count in weekly_opened_issues.values()]
-        weekly_issues_all = {"date": d, "open": c}
+        weekly_issues_all = {"dates": d, "open": c}
         d = [key.strftime("%Y-%m-%d") for key in weekly_closed_issues.keys()]
         c = [count for count in weekly_closed_issues.values()]
         weekly_issues_all['closed'] = c
@@ -177,15 +207,15 @@ def stats(repo_id):
         # Open and closed issues for the last 7 days
         d = [key.strftime("%m-%d") for key in week_open_issues.keys()]
         c = [count for count in week_open_issues.values()]
-        d_issues = {"date": d, "open": c}
+        d_issues = {"dates": d, "open": c}
         c = [count for count in week_commits.values()]
         d_issues['closed'] = c
 
         # Issues for the last 8 weeks
         if len(weekly_opened_issues) > 8:
-            weekly_list = list(weekly_opened_issues.items())[-7:]
+            weekly_list = list(weekly_opened_issues.items())[-8:]
             weekly_open_issues = dict(weekly_list)
-            weekly_list = list(weekly_closed_issues.items())[-7:]
+            weekly_list = list(weekly_closed_issues.items())[-8:]
             weekly_close_issues = dict(weekly_list)
         else:
             weekly_open_issues = weekly_opened_issues
@@ -194,9 +224,8 @@ def stats(repo_id):
         # Open and closed issues for the last 8 weeks
         d = [key.strftime("%m-%d") for key in weekly_open_issues.keys()]
         c = [count for count in weekly_open_issues.values()]
-        w_issues = {"date": d, "open": c}
-        week_open_i['issues'] = c
-        c = [count for count in weekly_commits.values()]
+        w_issues = {"dates": d, "open": c}
+        c = [count for count in weekly_closed_issues.values()]
         w_issues['closed'] = c
 
         # Issues for the last 52 weeks
@@ -209,20 +238,16 @@ def stats(repo_id):
             weekly_open_issues = weekly_opened_issues
             weekly_close_issues = weekly_closed_issues
 
-        # Open and closed issues for the last 8 weeks
+        # Open and closed issues for the last 52 weeks
         d = [key.strftime("%m-%d") for key in weekly_open_issues.keys()]
         c = [count for count in weekly_open_issues.values()]
-        w52_issues = {"date": d, "open": c}
-        c = [count for count in weekly_commits.values()]
+        w52_issues = {"dates": d, "open": c}
+        c = [count for count in weekly_closed_issues.values()]
         w52_issues['closed'] = c
     else:
-        d_issues = {"date": [], "open": [], "closed": []}
-        w_issues = {"date": [], "open": [], "closed": []}
-        w52_issues = {"date": [], "open": [], "closed": []}
-
-    # Returns commits for the last 52 weeks.
-    url = "https://api.github.com/repos/{}/{}/stats/participation"\
-          .format(repo.owner, repo.repo_name)
+        d_issues = {"dates": [], "open": [], "closed": []}
+        w_issues = {"dates": [], "open": [], "closed": []}
+        w52_issues = {"dates": [], "open": [], "closed": []}
 
     data = {
         "commits": t_commits,
@@ -237,6 +262,8 @@ def stats(repo_id):
                            all_time=json.dumps(d_commits),
                            top_c=json.dumps(top_c),
                            week=json.dumps(week_c),
+                           w_commits=json.dumps(w_commits),
+                           w52_commits=json.dumps(w52_commits),
                            d_issues=json.dumps(d_issues),
                            w_issues=json.dumps(w_issues),
                            w52_issues=json.dumps(w52_issues))
