@@ -14,8 +14,8 @@
     <header>
       <div class="logo"><span>ProStats</span></div>
       <div class="links">
-	    <ul>
-          <li><a href="signup.html">Sign Up</a></li>
+        <ul>
+          <li><a href="{{ url_for('app_views.create_user') }}">Sign Up</a></li>
         </ul>
       </div>
     </header>
@@ -23,7 +23,10 @@
     <section>
       <div class="form">
         <h3>Login</h3>
-	<form id="login">
+	<form id="login" method="post" action="{{ url_for('app_views.login') }}">
+	  {% if msg %}
+	  <span>{{ msg }}</span>
+	  {% endif %}
 	  <input type="text" name="email" placeholder="Email" />
 	  <input type="password" name="password" placeholder="Password" />
 	  <a href="">Forget password?</a>
@@ -34,7 +37,7 @@
 
     <footer>
       <div id="logo"><span>ProStats</span></div>
-      <a href="signup.html">Sign Up</a>
+      <a href="{{ url_for('app_views.create_user') }}">Sign Up</a>
     </footer>
   </body>
 </html>

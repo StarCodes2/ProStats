@@ -16,7 +16,6 @@
       <div class="links">
 	<ul>
           <li class="active"><a href="{{ url_for('app_views.repos') }}">Repos</a></li>
-	  <li><a href="{{ url_for('app_views.stats', current_user.repos[0].id) }}">Stats</a></li>
 	  <li><a href="{{ url_for('app_views.logout') }}">Logout</a></li>
         </ul>
       </div>
@@ -26,33 +25,33 @@
       <div class="sec_header">
         <h2>Repositories</h2>
         <span>
-          <a href="{{ url_for('app_views.add_repo') }}">Add New</a>
+          <a href="{{ url_for('app_views.addRepo') }}">Add New</a>
         </span>
       </div>
 	  
       <div class="repos">
       {% if repos %}
-        {% for repo in repos %}
+        {% for repo in repos.values() %}
 	<div class="repo">
           <div class="title">
             <h4>{{ repo.name }}</h4>
             <span>
-              <a href="{{ url_for('app_views.repo', repo_id=repo.id, 'edit') }}">Edit</a>
-	      <a href="{{ url_for('app_views.repo', repo_id=repo.id, 'delete') }}">Delete</a>
+              <a href="{{ url_for('app_views.editRepo', repo_id=repo['id']) }}">Edit</a>
+	      <a href="{{ url_for('app_views.deleteRepo', repo_id=repo['id']) }}">Delete</a>
             </span>
           </div>
           <div class="info">
-            <span><b>Owner:</b> {{ repo.owner }}</span>
-            <span><b>Commits:</b> 1,500</span>
-            <span><b>Pull Request:</b> 100</span>
+            <span><b>Owner:</b> {{ repo['owner'] }}</span>
+	    <span><b>Commits:</b> {{ repo['total_commits'] }}</span>
+            <span><b>Pull Request:</b> {{ repo['total_pull'] }}</span>
           </div>
           <div class="show_stat">
-            <a href="{{ url_for('app_views.stats', repo_id=repo.id) }}">Stats</a>
+            <a href="{{ url_for('app_views.stats', repo_id=repo['id']) }}">Stats</a>
           </div>
         </div>
 	{% endfor %}
       {% else %}
-        <h4>No project found</h4>
+        <h4>Add your first project</h4>
       {% endif %}
       </div>
     </section>

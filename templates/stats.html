@@ -16,85 +16,166 @@
     <header>
       <div class="logo"><span>ProStats</span></div>
       <div class="links">
-	    <ul>
-          <li><a href="repos.html">Repos</a></li>
-          <li class="active"><a href="stats.html">Stats</a></li>
-          <li><a href="#">Logout</a></li>
+        <ul>
+          <li><a href="{{ url_for('app_views.repos') }}">Repos</a></li>
+	  <li><a href="{{ url_for('app_views.logout') }}">Logout</a></li>
         </ul>
       </div>
     </header>
 
     <section>
       <div class="gen_stat">
-	    <ul>
-	      <li>Collaborators: <span>571</span></li>
-		  <li>Commits: <span>10,000</span></li>
-		  <li>Pull Rrequests: <span>120</span></li>
-		  <li>Issues: <span>102<span></li>
-		</ul>
-		
-		<ul>
-		  <li><h3>Top 5 Collaborators</h3></li>
-		  <li>starcodes</li>
-		  <li>markdowns</li>
-		  <li>codelord2345</li>
-		  <li>codexmax21</li>
-		  <li>procode52</li>
-		</ul>
-	  </div>
-	  <div class="gen-chart">
-	    <div class="charts-container">
-		  <div class="chart doughNut">
-		    <canvas id="genDoughChart"></canvas>
-		  </div>
-		  
-		  <div class="chart line">
-		    <canvas id="genLineChart"></canvas>
-		  </div>
-		</div>
-	  </div>
-	  
-	  <div class="time-chart">
-	    <h4>Last 7 days</h4>
-	    <div class="charts-container">
-		  <div class="chart">
-		    <canvas id="dailyCommit"></canvas>
-		  </div>
-		  
-		  <div class="chart">
-		    <canvas id="dailyIssues"></canvas>
-		  </div>
-		</div>
-	  
-	  <div class="time-chart">
-	    <h4>Last 8 weeks</h4>
-	    <div class="charts-container">
-		  <div class="chart">
-		    <canvas id="weeklyCommit"></canvas>
-		  </div>
-		  
-		  <div class="chart">
-		    <canvas id="weeklyIssues"></canvas>
-		  </div>
-		</div>
-	  
-	  <div class="time-chart">
-	    <h4>Last 12 months</h4>
-	    <div class="charts-container">
-		  <div class="chart">
-		    <canvas id="monthlyCommit"></canvas>
-		  </div>
-		  
-		  <div class="chart">
-		    <canvas id="monthlyIssues"></canvas>
-		  </div>
-		</div>
-	  </div>
+        <ul>
+          <li>Contributors: <span>{{ data['total_c'] }}</span></li>
+	  <li>Commits: <span>{{ data['commits'] }}</span></li>
+	  <li>Pull Requests: <span>{{ data['total_pull'] }}</span></li>
+	  <li>Issues: <span>{{ data['total_issues'] }}<span></li>
+        </ul>
+
+        <ul>
+          <li><h3>Top 5 Collaborators</h3></li>
+          {% if data %}
+            {% for name in data['names'] %}
+              {% if name != "others" %}
+          <li>{{ name }}</li>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+          <li>No Contributors</li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="gen-chart">
+        <div class="charts-container">
+          <div class="chart doughNut">
+            <canvas id="genDoughChart"></canvas>
+          </div>
+
+          <div class="chart line">
+            <canvas id="genLineChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-chart">
+        <h4>Last 7 days</h4>
+        <div class="charts-container">
+          <div class="chart">
+            <canvas id="dailyCommit"></canvas>
+          </div>
+
+          <div class="chart">
+            <canvas id="dailyIssues"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-chart">
+        <h4>Last 8 weeks</h4>
+        <div class="charts-container">
+          <div class="chart">
+            <canvas id="weeklyCommit"></canvas>
+          </div>
+
+          <div class="chart">
+            <canvas id="weeklyIssues"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-chart">
+        <h4>Last 12 months</h4>
+        <div class="charts-container">
+          <div class="chart">
+            <canvas id="w52Commit"></canvas>
+          </div>
+
+          <div class="chart">
+            <canvas id="w52Issues"></canvas>
+          </div>
+        </div>
+      </div>
     </section>
 
     <footer>
       <div id="logo"><span>ProStats</span></div>
-      <a href="#">Logout</a>
+      <a href="{{ url_for('app_views.logout') }}">Logout</a>
     </footer>
+
+    <script>
+      // Contributors Doughnut chart and total commits Line chart
+      {% if top_c %}
+      const t = JSON.parse({{ top_c|tojson }});
+      var labels = t['names'];
+      var data = t['commits'];
+      {% else %}
+      var labels = [];
+      var data = [];
+      {% endif %}
+      var label = 'Total Contributions';
+      var genDoughChart = doughnutChart(labels, label, data, $('#genDoughChart'));
+
+      {% if all_time %}
+      const all = JSON.parse({{ all_time|tojson }});
+      labels = all['dates'];
+      data = all['commits'];
+      {% endif %}
+      label = 'Total No of Commits';
+      var genLineChart = lineChart(labels, label, data, $('#genLineChart'));
+
+      // Commits for last 7 days
+      {% if week %}
+      const all_week = JSON.parse({{ week|tojson }});
+      labels = all_week['dates'];
+      data = all_week['commits'];
+      {% endif %}
+      label = 'Daily Commits';
+      var dailyCommit = lineChart(labels, label, data, $('#dailyCommit'));
+
+      // Issues for last 7 days
+      {% if d_issues %}
+      const all_week_i = JSON.parse({{ d_issues|tojson }});
+      labels = all_week_i['dates'];
+      data = [all_week_i['closed'], all_week_i['open']];
+      {% endif %}
+      label = ['closed issues', 'open issues'];
+      var dailyIssues = barChart(labels, label, data, $('#dailyIssues'));
+
+      // Commits for last 8 weeks
+      {% if w_commits %}
+      const weekly_c = JSON.parse({{ w_commits|tojson }});
+      labels = weekly_c['dates'];
+      data = weekly_c['commits'];
+      {% endif %}
+      label = 'Weekly Commits';
+      var weeklyCommit = lineChart(labels, label, data, $('#weeklyCommit'));
+
+      // Issues for last 8 weeks
+      {% if w_issues %}
+      const weekly_i = JSON.parse({{ w_issues|tojson }});
+      labels = weekly_i['dates'];
+      data = [weekly_i['closed'], weekly_i['open']];
+      {% endif %}
+      label = ['closed issues', 'open issues'];
+      var weeklyIssues = barChart(labels, label, data, $('#weeklyIssues'));
+
+      // Commits for last 52 weeks
+      {% if w52_commits %}
+      const w52_c = JSON.parse({{ w52_commits|tojson }});
+      labels = w52_c['dates'];
+      data = w52_c['commits'];
+      {% endif %}
+      label = 'Weekly Commits';
+      var w52Commit = lineChart(labels, label, data, $('#w52Commit'));
+
+      // Issues for last 52 weeks
+      {% if w52_issues %}
+      const w52_i = JSON.parse({{ w52_issues|tojson }});
+      labels = w52_i['dates'];
+      data = [w52_i['closed'], w52_i['open']];
+      {% endif %}
+      label = ['closed issues', 'open issues'];
+      var w52Issues = barChart(labels, label, data, $('#w52Issues'));
+    </script>
   </body>
 </html>

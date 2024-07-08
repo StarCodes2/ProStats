@@ -5,7 +5,7 @@ from models.repository import Repository
 from models.user import User
 from flask import abort, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
-from web.views import app_views
+from views import app_views
 import requests
 
 

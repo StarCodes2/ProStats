@@ -7,7 +7,7 @@ from models.repository import Repository
 from models.user import User
 from flask import abort, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
-from web.views import app_views
+from views import app_views
 import requests
 import json
 
@@ -47,7 +47,7 @@ def stats(repo_id):
     contributors = get_stats(url, headers)
     total_c = total_issues = 0
     t_commits = 0
-    pull = 0
+    total_pull = 0
     name = []
 
     if contributors and len(contributors) != 0:
@@ -149,101 +149,109 @@ def stats(repo_id):
 
     if issues:
         for issue in issues:
-            total_issues += 1
-            created_date = datetime.strptime(issue['created_at'],
-                                         "%Y-%m-%dT%H:%M:%SZ").date()
-            daily_opened_issues[created_date] += 1
-            weekly_opened_issues[week_start(created_date)] += 1
+            if 'pull_request' in issue:
+                total_pull += 1
+            else:
+                total_issues += 1
+                created_date = datetime.strptime(issue['created_at'],
+                                                 "%Y-%m-%dT%H:%M:%SZ").date()
+                daily_opened_issues[created_date] += 1
+                weekly_opened_issues[week_start(created_date)] += 1
 
-            if issue.get('closed_at'):
-                closed_date = datetime.strptime(issue['closed_at'],
-                                                "%Y-%m-%dT%H:%M:%SZ").date()
-                daily_closed_issues[closed_date] += 1
-                weekly_closed_issues[week_start(closed_date)] += 1
+                if issue.get('closed_at'):
+                    closed_date = datetime.strptime(issue['closed_at'],
+                                                    "%Y-%m-%dT%H:%M:%SZ").date()
+                    daily_closed_issues[closed_date] += 1
+                    weekly_closed_issues[week_start(closed_date)] += 1
 
-        # Add missing day and weeks
-        first_date = min(daily_opened_issues.keys())
-        last_date = datetime.now().date()
-        all_days = list_of_days(first_date, last_date)
-        for day in all_days:
-            if day not in daily_opened_issues:
-                daily_opened_issues[day] = 0
-            if week_start(day) not in weekly_opened_issues:
-                weekly_opened_issues[week_start(day)] = 0
-
-            if day not in daily_closed_issues:
-                daily_closed_issues[day] = 0
-            if week_start(day) not in weekly_closed_issues:
-                weekly_closed_issues[week_start(day)] = 0
-
-        # Sort and format for Jsonification
-        daily_opened_issues = dict((sorted(daily_opened_issues.items())))
-        weekly_opened_issues = dict((sorted(weekly_opened_issues.items())))
-        daily_closed_issues = dict((sorted(daily_closed_issues.items())))
-        weekly_closed_issues = dict((sorted(weekly_closed_issues.items())))
-        d = [key.strftime("%Y-%m-%d") for key in daily_opened_issues.keys()]
-        c = [count for count in daily_opened_issues.values()]
-        daily_issues_all = {"dates": d, "open": c}
-        c = [count for count in daily_closed_issues.values()]
-        daily_issues_all['closed'] = c
-
-        d = [key.strftime("%Y-%m-%d") for key in weekly_opened_issues.keys()]
-        c = [count for count in weekly_opened_issues.values()]
-        weekly_issues_all = {"dates": d, "open": c}
-        d = [key.strftime("%Y-%m-%d") for key in weekly_closed_issues.keys()]
-        c = [count for count in weekly_closed_issues.values()]
-        weekly_issues_all['closed'] = c
-
-        # Issues for the last 7 days
-        if len(daily_opened_issues) > 7:
-            week_list = list(daily_opened_issues.items())[-7:]
-            week_open_issues = dict(week_list)
-            week_list = list(daily_closed_issues.items())[-7:]
-            week_close_issues = dict(week_list)
+        if total_issues < 1:
+            d_issues = {"dates": [], "open": [], "closed": []}
+            w_issues = {"dates": [], "open": [], "closed": []}
+            w52_issues = {"dates": [], "open": [], "closed": []}
         else:
-            week_open_issues = daily_opened_issues
-            week_close_issues = daily_closed_issues
+            # Add missing day and weeks
+            first_date = min(daily_opened_issues.keys())
+            last_date = datetime.now().date()
+            all_days = list_of_days(first_date, last_date)
+            for day in all_days:
+                if day not in daily_opened_issues:
+                    daily_opened_issues[day] = 0
+                if week_start(day) not in weekly_opened_issues:
+                    weekly_opened_issues[week_start(day)] = 0
 
-        # Open and closed issues for the last 7 days
-        d = [key.strftime("%m-%d") for key in week_open_issues.keys()]
-        c = [count for count in week_open_issues.values()]
-        d_issues = {"dates": d, "open": c}
-        c = [count for count in week_commits.values()]
-        d_issues['closed'] = c
+                if day not in daily_closed_issues:
+                    daily_closed_issues[day] = 0
+                if week_start(day) not in weekly_closed_issues:
+                    weekly_closed_issues[week_start(day)] = 0
 
-        # Issues for the last 8 weeks
-        if len(weekly_opened_issues) > 8:
-            weekly_list = list(weekly_opened_issues.items())[-8:]
-            weekly_open_issues = dict(weekly_list)
-            weekly_list = list(weekly_closed_issues.items())[-8:]
-            weekly_close_issues = dict(weekly_list)
-        else:
-            weekly_open_issues = weekly_opened_issues
-            weekly_close_issues = weekly_closed_issues
+            # Sort and format for Jsonification
+            daily_opened_issues = dict((sorted(daily_opened_issues.items())))
+            weekly_opened_issues = dict((sorted(weekly_opened_issues.items())))
+            daily_closed_issues = dict((sorted(daily_closed_issues.items())))
+            weekly_closed_issues = dict((sorted(weekly_closed_issues.items())))
+            d = [key.strftime("%Y-%m-%d") for key in daily_opened_issues.keys()]
+            c = [count for count in daily_opened_issues.values()]
+            daily_issues_all = {"dates": d, "open": c}
+            c = [count for count in daily_closed_issues.values()]
+            daily_issues_all['closed'] = c
 
-        # Open and closed issues for the last 8 weeks
-        d = [key.strftime("%m-%d") for key in weekly_open_issues.keys()]
-        c = [count for count in weekly_open_issues.values()]
-        w_issues = {"dates": d, "open": c}
-        c = [count for count in weekly_closed_issues.values()]
-        w_issues['closed'] = c
+            d = [key.strftime("%Y-%m-%d") for key in weekly_opened_issues.keys()]
+            c = [count for count in weekly_opened_issues.values()]
+            weekly_issues_all = {"dates": d, "open": c}
+            d = [key.strftime("%Y-%m-%d") for key in weekly_closed_issues.keys()]
+            c = [count for count in weekly_closed_issues.values()]
+            weekly_issues_all['closed'] = c
 
-        # Issues for the last 52 weeks
-        if len(weekly_opened_issues) > 52:
-            weekly_list = list(weekly_opened_issues.items())[-52:]
-            weekly_open_issues = dict(weekly_list)
-            weekly_list = list(weekly_closed_issues.items())[-52:]
-            weekly_close_issues = dict(weekly_list)
-        else:
-            weekly_open_issues = weekly_opened_issues
-            weekly_close_issues = weekly_closed_issues
+            # Issues for the last 7 days
+            if len(daily_opened_issues) > 7:
+                week_list = list(daily_opened_issues.items())[-7:]
+                week_open_issues = dict(week_list)
+                week_list = list(daily_closed_issues.items())[-7:]
+                week_close_issues = dict(week_list)
+            else:
+                week_open_issues = daily_opened_issues
+                week_close_issues = daily_closed_issues
 
-        # Open and closed issues for the last 52 weeks
-        d = [key.strftime("%m-%d") for key in weekly_open_issues.keys()]
-        c = [count for count in weekly_open_issues.values()]
-        w52_issues = {"dates": d, "open": c}
-        c = [count for count in weekly_closed_issues.values()]
-        w52_issues['closed'] = c
+            # Open and closed issues for the last 7 days
+            d = [key.strftime("%Y-%m-%d") for key in week_open_issues.keys()]
+            c = [count for count in week_open_issues.values()]
+            d_issues = {"dates": d, "open": c}
+            c = [count for count in week_close_issues.values()]
+            d_issues['closed'] = c
+
+            # Issues for the last 8 weeks
+            if len(weekly_opened_issues) > 8:
+                weekly_list = list(weekly_opened_issues.items())[-8:]
+                weekly_open_issues = dict(weekly_list)
+                weekly_list = list(weekly_closed_issues.items())[-8:]
+                weekly_close_issues = dict(weekly_list)
+            else:
+                weekly_open_issues = weekly_opened_issues
+                weekly_close_issues = weekly_closed_issues
+
+            # Open and closed issues for the last 8 weeks
+            d = [key.strftime("%Y-%m-%d") for key in weekly_open_issues.keys()]
+            c = [count for count in weekly_open_issues.values()]
+            w_issues = {"dates": d, "open": c}
+            c = [count for count in weekly_close_issues.values()]
+            w_issues['closed'] = c
+
+            # Issues for the last 52 weeks
+            if len(weekly_opened_issues) > 52:
+                weekly_list = list(weekly_opened_issues.items())[-52:]
+                weekly_open_issues = dict(weekly_list)
+                weekly_list = list(weekly_closed_issues.items())[-52:]
+                weekly_close_issues = dict(weekly_list)
+            else:
+                weekly_open_issues = weekly_opened_issues
+                weekly_close_issues = weekly_closed_issues
+
+            # Open and closed issues for the last 52 weeks
+            d = [key.strftime("%Y-%m-%d") for key in weekly_open_issues.keys()]
+            c = [count for count in weekly_open_issues.values()]
+            w52_issues = {"dates": d, "open": c}
+            c = [count for count in weekly_close_issues.values()]
+            w52_issues['closed'] = c
     else:
         d_issues = {"dates": [], "open": [], "closed": []}
         w_issues = {"dates": [], "open": [], "closed": []}
@@ -251,7 +259,7 @@ def stats(repo_id):
 
     data = {
         "commits": t_commits,
-        "pull": pull,
+        "total_pull": total_pull,
         "total_c": total_c,
         "total_issues": total_issues,
         "names": name

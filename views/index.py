@@ -8,7 +8,7 @@ from os import environ
 from flask import Flask, render_template, request, redirect, make_response, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from hashlib import md5
-from web.views import app_views
+from views import app_views
 
 
 @app_views.route('/', strict_slashes=False)

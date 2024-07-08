@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"></meta>
-    <title>ProStats - Add New</title>
-    <link rel="shortcut icon" href="images/icon.ico" >
+    <title>ProStats - Edit Repo</title>
+    <link rel="shortcut icon" href="../static/images/icon.ico" >
     <link rel="stylesheet" type="text/css" href="../static/styles/header.css" />
     <link rel="stylesheet" type="text/css" href="../static/styles/common.css" />
     <link rel="stylesheet" type="text/css" href="../static/styles/forms.css" />
@@ -14,10 +14,9 @@
     <header>
       <div class="logo"><span>ProStats</span></div>
       <div class="links">
-        <ul>
+	<ul>
           <li class="active"><a href="{{ url_for('app_views.repos') }}">Repos</a></li>
-          <li><a href="{{ url_for('app_views.stats', current_user.repos[0].id) }}">Stats</a></li>
-          <li><a href="{{ url_for('app_views.logout') }}">Logout</a></li>
+	  <li><a href="{{ url_for('app_views.logout') }}">Logout</a></li>
         </ul>
       </div>
     </header>
@@ -26,31 +25,67 @@
       <h2>Add New Repository</h2>
       <div id="add">
         <div class="form">
-          <form id="signup" action="{{ url_for('app_view.add_repo') }}" method="post">
+        {% if msg %}
+	  <span>{{ msg }}</span>
+	{% endif %}
+          {% if data %}
+          <form id="signup" action="{{ url_for('app_views.addRepo') }}" method="post">
             <label for="projectName">Project Name:</label>
-            <input type="text" name="name" id="projectName" />
+	    <input type="text" id="projectName" name="name" value="{{ data['name'] }}" />
 
-            <label for="repositoryOwner">Repository Owner:</label>
-            <input type="text" name="owner" id="repositoryOwner" />
+            <label for="repositoryOwner">GitHub Username:</label>
+	    <input type="text" id="repositoryOwner" name="owner" value="{{ data['owner'] }}" />
 
-            <label for="githubLink">GitHub Repo Link:</label>
-            <input type="text" name="link" id="githubLink" />
+	    <label for="githubRepoName">GitHub Repository Name:</label>
+	    <input type="text" id="githubRepoName" name="repo_name" value="{{ data['repo_name'] }}" />
+
+            <span class="radio">
+            {% if data['privacy'] == "public" %}
+              <input type="radio" id="public" name="privacy" value="public" checked />
+              <label for="public">Public</label>
+	      <input type="radio" id="private" name="privacy" value="private" />
+              <label for="private">Private</label>
+	    {% else %}
+              <input type="radio" id="public" name="privacy" value="public" />
+              <label for="public">Public</label>
+	      <input type="radio" id="private" name="privacy" value="private" checked />
+              <label for="private">Private</label>
+            {% endif %}
+            </span>
+
+            <label for="pat">Personal Access Token:</label>
+	    <input type="text" id="pat" name="pat" value="{{ data['pat'] }}" />
+
+            <span>
+              <button type="submit">Save</button>
+	      <button class="btn-cancel" type="cancel" onclick="window.location.href='{{ url_for('app_views.repos') }}'">Cancel</button>
+            </span>
+          </form>
+	  {% else %}
+	  <form id="signup" action="{{ url_for('app_views.addRepo') }}" method="post">                                              <label for="projectName">Project Name:</label>
+            <input type="text" id="projectName" name="name" />
+	    <label for="repositoryOwner">GitHub Username:</label>
+	    <input type="text" id="repositoryOwner" name="owner" />
+	    <label for="githubRepoName">GitHub Repository Name:</label>
+            <input type="text" id="githubRepoName" name="repo_name" />
 
             <span class="radio">
               <input type="radio" id="public" name="privacy" value="public" />
               <label for="public">Public</label>
-              <input type="radio" id="private" name="privacy" value="private" />
+              <input type="radio" id="private" name="privacy" value="private" checked />
               <label for="private">Private</label>
             </span>
 
             <label for="pat">Personal Access Token:</label>
             <input type="text" id="pat" name="pat" />
+
             <span>
               <button type="submit">Save</button>
-              <button class="btn-cancel" type="cancel">Cancel</button>
+	      <button class="btn-cancel" type="cancel" onclick="window.location.href='{{ url_for('app_views.repos') }}'">Cancel</button>
             </span>
           </form>
-        </div>
+	  {% endif %}
+	</div>
 
         <div class="note">
           <h3>Note</h3>
