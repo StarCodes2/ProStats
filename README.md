@@ -1,4 +1,5 @@
 # ProStats
+![Project landing page](https://github.com/StarCodes2/ProStats/blob/main/image.png)
 
 ## Table of Contents
 
@@ -13,9 +14,9 @@
 ProStats is a web application designed to help Project Managers, Contributors/Collaborators, and Open Source Maintainers create visualizations of activities on their project's GitHub repository. As a full-stack developer working on this project, my goal was to create an application that's easy to use and accessible on both mobile and web platforms.
 
 This project was inspired by my experience as a student at ALX Africa. During the program, we needed to work in teams on various projects, with each team member responsible for a specific percentage of the commits to the project's repository. Tracking these commits became tedious, as GitHub only provides a bar chart showing the number of commits per contributor. I realized this could be improved, and with some research, I found that all the necessary data for better visualization is accessible through the GitHub RESTful API. This made choosing this project a no-brainer for me.
-[ProStats](https://prostats.pythonanywhere.com/)
-[Project Article](https://medium.com/@anu.ezekiel02/welcome-to-prostats-87f58bcd84ce)
-[Dev Profile](https://www.linkedin.com/in/ezekiel-ogunewu)
+- [ProStats](https://prostats.pythonanywhere.com/)
+- [Project Article](https://medium.com/@anu.ezekiel02/welcome-to-prostats-87f58bcd84ce)
+- [Developer's Profile](https://www.linkedin.com/in/ezekiel-ogunewu)
 
 ## Installation
 
