@@ -4,11 +4,11 @@
 ## Table of Contents
 
 - [About](#about)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Contributing](#-contributing)
-- [Related projects](#-related-projects)
-- [License](#-license)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [Related projects](#related-projects)
+- [License](#license)
 
 ## About
 ProStats is a web application designed to help Project Managers, Contributors/Collaborators, and Open Source Maintainers create visualizations of activities on their project's GitHub repository. As a full-stack developer working on this project, my goal was to create an application that's easy to use and accessible on both mobile and web platforms.
