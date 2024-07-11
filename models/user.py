@@ -2,7 +2,6 @@
 """ holds class User"""
 
 from flask_login import UserMixin
-import models
 from models.base_model import BaseModel, Base
 from os import getenv
 import sqlalchemy
@@ -13,18 +12,12 @@ from hashlib import md5
 
 class User(BaseModel, UserMixin, Base):
     """Representation of a user """
-    if models.storage_t == 'db':
-        __tablename__ = 'users'
-        email = Column(String(128), unique=True, nullable=False)
-        password = Column(String(128), nullable=False)
-        first_name = Column(String(128), nullable=True)
-        last_name = Column(String(128), nullable=True)
-        repos = relationship("Repository", backref="user")
-    else:
-        email = ""
-        password = ""
-        first_name = ""
-        last_name = ""
+    __tablename__ = 'users'
+    email = Column(String(128), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(128), nullable=True)
+    last_name = Column(String(128), nullable=True)
+    repos = relationship("Repository", backref="user")
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
